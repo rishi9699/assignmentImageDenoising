@@ -1,7 +1,7 @@
 curimg = imnoi;
 alpha=0.5;
 
-for passes = 1:2
+for passes = 1:10
 for i=2:255
     for j=2:255
         xi = curimg(i,j);
