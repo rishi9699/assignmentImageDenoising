@@ -3,14 +3,21 @@ alpha=0.5;
 
 for passes = 1:5
     disp("pass number"+passes);
-    for i=2:255
-        for j=2:255
-            xi = curimg(i,j);
-            top = curimg(i-1,j);
-            bottom = curimg(i+1,j);
-            left = curimg(i,j-1);
-            right = curimg(i,j+1);
-            y=imnoi(i,j);
+    for i=0:255
+        for j=0:255
+%             xi = curimg(i,j);
+%             top = curimg(i-1,j);
+%             bottom = curimg(i+1,j);
+%             left = curimg(i,j-1);
+%             right = curimg(i,j+1);
+%             y=imnoi(i,j);
+            
+            xi = curimg(i+1,j+1);
+            top = curimg(mod(i-1,256)+1, j+1);
+            bottom = curimg(mod(i+1,256)+1, j+1);
+            left = curimg(i+1,mod(j-1,256)+1);
+            right = curimg(i+1,mod(j+1,256)+1);
+            y=imnoi(i+1,j+1);
 
 
             %minimizing for each pixel..
@@ -43,7 +50,7 @@ for passes = 1:5
                     st=st*0.5;
                 end
             end
-            curimg(i,j) = xi;
+            curimg(i+1,j+1) = xi;
             
         end
     end
