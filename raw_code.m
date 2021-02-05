@@ -31,7 +31,7 @@ for passes = 1:5
 %             end
             %curimg(i,j) = xi;
             
-            st=0.01;
+            st=0.1;
             while st>=0.001                
                 xi_new = xi - st * (alpha*2*(xi-y) + (1-alpha)*2*(4*xi -top-bottom-left-right) );
                 new_obj = alpha * (abs(y - xi_new))^2 + (1-alpha) * ((xi_new-top)^2 + (xi_new-bottom)^2 + (xi_new-left)^2 + (xi_new-right)^2);
