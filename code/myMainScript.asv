@@ -20,10 +20,10 @@ disp(RRMSE_original)
 %
 alpha_quadratic = 0.96;
 
-alpha_huber = 0.1;
+alpha_huber = 0.55;
 gamma_huber = 0.008;
 
-alpha_da = 0.3;
+alpha_da = 0.1;
 gamma_da = 0.02;
 %%
 %  The optimal values are as follows,
@@ -37,7 +37,7 @@ disp("alpha = "+alpha_da+" and gamma = " + gamma_da+ " for Discontinuity-adaptiv
 %  RRMSE values corresponding to plus/minus 20% of the optimal value is also calculated in order to depict the optimality of
 %  the above parameters obtained.
 
-quadraticDenoisedImage = denoiseQuadraticMRF(alpha_quadratic, imageNoisy);
+[quadraticDenoisedImage, objectiveValsQuadratic] = denoiseQuadraticMRF(alpha_quadratic, imageNoisy);
 disp("RRMSE(alpha) for quadratic MRF is,")
 disp(sqrt(sum((imageNoiseless - quadraticDenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
 disp("RRMSE(1.2*alpha) for quadratic MRF is,")
@@ -46,7 +46,7 @@ disp("RRMSE(0.8*alpha) for quadratic MRF is,")
 disp(sqrt(sum((imageNoiseless - denoiseQuadraticMRF(0.8*alpha_quadratic, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 
 %%
-huberDenoisedImage = denoiseHuberMRF(alpha_huber, gamma_huber, imageNoisy);
+[huberDenoisedImage, objectiveValsHuber] = denoiseHuberMRF(alpha_huber, gamma_huber, imageNoisy);
 disp("RRMSE(alpha, gamma) for Discontinuity-adaptive Huber MRF is,")
 disp(sqrt(sum((imageNoiseless - huberDenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
 disp("RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive Huber MRF is,")
@@ -59,7 +59,7 @@ disp("RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive Huber MRF is,")
 disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(alpha_huber, 0.8*gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 
 %%
-da_DenoisedImage = denoiseDAdapMRF(alpha_da, gamma_da, imageNoisy);
+[da_DenoisedImage, objectiveValsDA] = denoiseDAdapMRF(alpha_da, gamma_da, imageNoisy);
 disp("RRMSE(alpha, gamma) for Discontinuity-adaptive  MRF is,")
 disp(sqrt(sum((imageNoiseless - da_DenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
 disp("RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive  MRF is,")
@@ -95,3 +95,21 @@ figure(5)
 imshow(da_DenoisedImage, 'colormap', jet)
 colorbar
 title('Image denoised using discontinuity adaptive prior')
+
+%% Plotting the objective-function values versus iteration for the 3 denoised results
+
+plot(1:sum(objectiveValsQuadratic~=0), objectiveValsQuadratic(1:sum(objectiveValsQuadratic~=0)), '-o')
+title("Objective-function value vs. iteration for Gaussian MRF prior")
+xlabel("iteration")
+ylabel("Objective-function value")
+xticks(1:sum(objectiveValsQuadratic~=0))
+
+figure(2)
+plot(1:sum(objectiveValsDA~=0), objectiveValsDA(1:sum(objectiveValsDA~=0)))
+title("Objective-function value vs. iteration for discontinuity adaptive MRF prior")
+xlabel("iteration")
+ylabel("Objective-function value")
+xticks(1:sum(objectiveValsDA~=0))
+
+plot(1:sum(objectiveValsHuber~=0), objectiveValsHuber(1:sum(objectiveValsHuber~=0)))
+

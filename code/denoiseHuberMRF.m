@@ -1,21 +1,26 @@
 % 0.1, 0.01
-function curimg = denoiseHuberMRF(alpha, gamma, imnoi)
+function [curimg, obj_values] = denoiseHuberMRF(alpha, gamma, imnoi)
     curimg = imnoi;
     oldimg = curimg;
     
-    passes=1;
+    iter=1;
     rrmse_cur=0;
     
+    obj_values=zeros(1,100);
+    
     while true
-        %disp("pass number"+passes);
-        for i=2:255
-            for j=2:255
-                xi = curimg(i,j);
-                top = curimg(i-1,j);
-                bottom = curimg(i+1,j);
-                left = curimg(i,j-1);
-                right = curimg(i,j+1);
-                y=imnoi(i,j);
+        %disp("pass number"+iter);
+        total_obj_value = 0;
+        
+        for i=0:255
+            for j=0:255
+                
+                xi = curimg(i+1,j+1);
+                top = curimg(mod(i-1,256)+1, j+1);
+                bottom = curimg(mod(i+1,256)+1, j+1);
+                left = curimg(i+1,mod(j-1,256)+1);
+                right = curimg(i+1,mod(j+1,256)+1);
+                y=imnoi(i+1,j+1);
 
                 st=0.5;
                 while st>=0.001                
@@ -56,22 +61,26 @@ function curimg = denoiseHuberMRF(alpha, gamma, imnoi)
                         st=st*0.5;
                     end
                 end
-                curimg(i,j) = xi;
+                
+                total_obj_value = total_obj_value + (alpha * (abs(y - xi))^2 + (1-alpha) * huberpriorsum(xi,top,bottom,left,right, gamma));
+                curimg(i+1,j+1) = xi;
 
             end
         end
+        
         rrmse_new = sqrt(sum((curimg - oldimg).^2))/sqrt(sum(curimg.^2));
-        %disp(passes)
+        %disp(iter)
         %disp(rrmse_new)
-        if (abs(rrmse_cur - rrmse_new) < 0.0001 || passes>100)
-            %disp(passes)
+        if (abs(rrmse_cur - rrmse_new) < 0.0001 || iter>100)
+            %disp(iter)
             %disp(rrmse_cur)
             break
         else
             rrmse_cur = rrmse_new;
         end
-            
-        passes=passes+1;
+        
+        obj_values(iter) = total_obj_value;    
+        iter=iter+1;
         
     end
 end
