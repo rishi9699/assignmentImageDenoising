@@ -70,3 +70,28 @@ disp("RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive  MRF is,")
 disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 1.2*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 disp("RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive  MRF is,")
 disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 0.8*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+
+%% Plotting the noisy, noiseless and denoised images
+imshow(imageNoiseless, 'colormap', jet)
+colorbar
+title('Noiseless Image')
+
+figure(2)
+imshow(imageNoisy, 'colormap', jet)
+colorbar
+title('Noisy Image')
+
+figure(3)
+imshow(quadraticDenoisedImage, 'colormap', jet)
+colorbar
+title('Image denoised using quadratic prior')
+
+figure(4)
+imshow(huberDenoisedImage, 'colormap', jet)
+colorbar
+title('Image denoised using huber prior')
+
+figure(5)
+imshow(da_DenoisedImage, 'colormap', jet)
+colorbar
+title('Image denoised using discontinuity adaptive prior')

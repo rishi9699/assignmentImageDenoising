@@ -67,7 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">RRMSE between noisy and noiseless images</a></li><li><a href="#3">Finding out the optimal parameters of alpha and gamma for all the three prior models</a></li><li><a href="#5">Evidence of the optimality of the reported values</a></li></ul></div><h2 id="1">RRMSE between noisy and noiseless images</h2><pre class="codeinput">load(<span class="string">'../data/assignmentImageDenoisingPhantom'</span>)
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">RRMSE between noisy and noiseless images</a></li><li><a href="#3">Finding out the optimal parameters of alpha and gamma for all the three prior models</a></li><li><a href="#5">Evidence of the optimality of the reported values</a></li><li><a href="#8">Plotting the noisy, noiseless and denoised images</a></li></ul></div><h2 id="1">RRMSE between noisy and noiseless images</h2><pre class="codeinput">load(<span class="string">'../data/assignmentImageDenoisingPhantom'</span>)
 
 RRMSE_original = sqrt(sum((imageNoiseless - imageNoisy).^2))/sqrt(sum(imageNoiseless.^2));
 </pre><pre>The value of the RRMSE
@@ -84,14 +84,14 @@ we have to find this real time, as the images are inputs and no fixed</pre><pre 
 alpha_huber = 0.1;
 gamma_huber = 0.008;
 
-alpha_da = 0.1;
-gamma_da = 0.2;
+alpha_da = 0.3;
+gamma_da = 0.02;
 </pre><pre>The optimal values are as follows,</pre><pre class="codeinput">disp(<span class="string">"alpha = "</span>+alpha_quadratic+<span class="string">" for Quadratic MRF"</span>)
 disp(<span class="string">"alpha = "</span>+alpha_huber+<span class="string">" and gamma = "</span> + gamma_huber+ <span class="string">" for Discontinuity-adaptive Huber MRF"</span>)
 disp(<span class="string">"alpha = "</span>+alpha_da+<span class="string">" and gamma = "</span> + gamma_da+ <span class="string">" for Discontinuity-adaptive MRF"</span>)
 </pre><pre class="codeoutput">alpha = 0.96 for Quadratic MRF
 alpha = 0.1 and gamma = 0.008 for Discontinuity-adaptive Huber MRF
-alpha = 0.1 and gamma = 0.2 for Discontinuity-adaptive MRF
+alpha = 0.3 and gamma = 0.02 for Discontinuity-adaptive MRF
 </pre><h2 id="5">Evidence of the optimality of the reported values</h2><pre>Various RRMSE values for the three priors and their optimal parameters are shown here.
 RRMSE values corresponding to plus/minus 20% of the optimal value is also calculated in order to depict the optimality of
 the above parameters obtained.</pre><pre class="codeinput">quadraticDenoisedImage = denoiseQuadraticMRF(alpha_quadratic, imageNoisy);
@@ -101,9 +101,16 @@ disp(<span class="string">"RRMSE(1.2*alpha) for quadratic MRF is,"</span>)
 disp(sqrt(sum((imageNoiseless - denoiseQuadraticMRF(min(1.2*alpha_quadratic, 1), imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 disp(<span class="string">"RRMSE(0.8*alpha) for quadratic MRF is,"</span>)
 disp(sqrt(sum((imageNoiseless - denoiseQuadraticMRF(0.8*alpha_quadratic, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+</pre><pre class="codeoutput">RRMSE(alpha) for quadratic MRF is,
+    0.2184
 
+RRMSE(1.2*alpha) for quadratic MRF is,
+    0.2300
 
-huberDenoisedImage = denoiseHuberMRF(alpha_huber, gamma_huber, imageNoisy);
+RRMSE(0.8*alpha) for quadratic MRF is,
+    0.2322
+
+</pre><pre class="codeinput">huberDenoisedImage = denoiseHuberMRF(alpha_huber, gamma_huber, imageNoisy);
 disp(<span class="string">"RRMSE(alpha, gamma) for Discontinuity-adaptive Huber MRF is,"</span>)
 disp(sqrt(sum((imageNoiseless - huberDenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
 disp(<span class="string">"RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive Huber MRF is,"</span>)
@@ -114,16 +121,7 @@ disp(<span class="string">"RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive Hu
 disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(alpha_huber, 1.2*gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 disp(<span class="string">"RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive Huber MRF is,"</span>)
 disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(alpha_huber, 0.8*gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
-</pre><pre class="codeoutput">RRMSE(alpha) for quadratic MRF is,
-    0.2184
-
-RRMSE(1.2*alpha) for quadratic MRF is,
-    0.2300
-
-RRMSE(0.8*alpha) for quadratic MRF is,
-    0.2322
-
-RRMSE(alpha, gamma) for Discontinuity-adaptive Huber MRF is,
+</pre><pre class="codeoutput">RRMSE(alpha, gamma) for Discontinuity-adaptive Huber MRF is,
     0.1640
 
 RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive Huber MRF is,
@@ -138,7 +136,56 @@ RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive Huber MRF is,
 RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive Huber MRF is,
     0.1649
 
-</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+</pre><pre class="codeinput">da_DenoisedImage = denoiseDAdapMRF(alpha_da, gamma_da, imageNoisy);
+disp(<span class="string">"RRMSE(alpha, gamma) for Discontinuity-adaptive  MRF is,"</span>)
+disp(sqrt(sum((imageNoiseless - da_DenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(<span class="string">"RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive  MRF is,"</span>)
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(min(1.2*alpha_da, 1), gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(<span class="string">"RRMSE(0.8*alpha, gamma) for Discontinuity-adaptive  MRF is,"</span>)
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(0.8*alpha_da, gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(<span class="string">"RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive  MRF is,"</span>)
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 1.2*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(<span class="string">"RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive  MRF is,"</span>)
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 0.8*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+</pre><pre class="codeoutput">RRMSE(alpha, gamma) for Discontinuity-adaptive  MRF is,
+    0.1798
+
+RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive  MRF is,
+    0.1857
+
+RRMSE(0.8*alpha, gamma) for Discontinuity-adaptive  MRF is,
+    0.1747
+
+RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive  MRF is,
+    0.1780
+
+RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive  MRF is,
+    0.1830
+
+</pre><h2 id="8">Plotting the noisy, noiseless and denoised images</h2><pre class="codeinput">imshow(imageNoiseless, <span class="string">'colormap'</span>, jet)
+colorbar
+title(<span class="string">'Noiseless Image'</span>)
+
+figure(2)
+imshow(imageNoisy, <span class="string">'colormap'</span>, jet)
+colorbar
+title(<span class="string">'Noisy Image'</span>)
+
+figure(3)
+imshow(quadraticDenoisedImage, <span class="string">'colormap'</span>, jet)
+colorbar
+title(<span class="string">'Image denoised using quadratic prior'</span>)
+
+figure(4)
+imshow(huberDenoisedImage, <span class="string">'colormap'</span>, jet)
+colorbar
+title(<span class="string">'Image denoised using huber prior'</span>)
+
+figure(5)
+imshow(da_DenoisedImage, <span class="string">'colormap'</span>, jet)
+colorbar
+title(<span class="string">'Image denoised using discontinuity adaptive prior'</span>)
+</pre><img vspace="5" hspace="5" src="myMainScript_01.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_02.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_03.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_04.png" alt=""> <img vspace="5" hspace="5" src="myMainScript_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% RRMSE between noisy and noiseless images
 load('../data/assignmentImageDenoisingPhantom')
@@ -165,8 +212,8 @@ alpha_quadratic = 0.96;
 alpha_huber = 0.1;
 gamma_huber = 0.008;
 
-alpha_da = 0.1;
-gamma_da = 0.2;
+alpha_da = 0.3;
+gamma_da = 0.02;
 %%
 %  The optimal values are as follows,
 %
@@ -187,7 +234,7 @@ disp(sqrt(sum((imageNoiseless - denoiseQuadraticMRF(min(1.2*alpha_quadratic, 1),
 disp("RRMSE(0.8*alpha) for quadratic MRF is,")
 disp(sqrt(sum((imageNoiseless - denoiseQuadraticMRF(0.8*alpha_quadratic, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 
-
+%%
 huberDenoisedImage = denoiseHuberMRF(alpha_huber, gamma_huber, imageNoisy);
 disp("RRMSE(alpha, gamma) for Discontinuity-adaptive Huber MRF is,")
 disp(sqrt(sum((imageNoiseless - huberDenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
@@ -200,7 +247,43 @@ disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(alpha_huber, 1.2*gamma_huber, im
 disp("RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive Huber MRF is,")
 disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(alpha_huber, 0.8*gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 
+%%
+da_DenoisedImage = denoiseDAdapMRF(alpha_da, gamma_da, imageNoisy);
+disp("RRMSE(alpha, gamma) for Discontinuity-adaptive  MRF is,")
+disp(sqrt(sum((imageNoiseless - da_DenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
+disp("RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive  MRF is,")
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(min(1.2*alpha_da, 1), gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp("RRMSE(0.8*alpha, gamma) for Discontinuity-adaptive  MRF is,")
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(0.8*alpha_da, gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp("RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive  MRF is,")
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 1.2*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp("RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive  MRF is,")
+disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 0.8*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
 
+%% Plotting the noisy, noiseless and denoised images
+imshow(imageNoiseless, 'colormap', jet)
+colorbar
+title('Noiseless Image')
+
+figure(2)
+imshow(imageNoisy, 'colormap', jet)
+colorbar
+title('Noisy Image')
+
+figure(3)
+imshow(quadraticDenoisedImage, 'colormap', jet)
+colorbar
+title('Image denoised using quadratic prior')
+
+figure(4)
+imshow(huberDenoisedImage, 'colormap', jet)
+colorbar
+title('Image denoised using huber prior')
+
+figure(5)
+imshow(da_DenoisedImage, 'colormap', jet)
+colorbar
+title('Image denoised using discontinuity adaptive prior')
 
 ##### SOURCE END #####
 --></body></html>
