@@ -2,12 +2,7 @@
 load('../data/assignmentImageDenoisingPhantom')
 
 RRMSE_original = sqrt(sum((imageNoiseless - imageNoisy).^2))/sqrt(sum(imageNoiseless.^2));
-
-%%
-%  The value of the RRMSE
-%  between the originial image and the noisy image is
-%
-disp(RRMSE_original)
+disp("The The value of the RRMSE between the originial image and the noisy image is "+ RRMSE_original)
 
 %% Finding out the optimal parameters of alpha and gamma for all the three prior models
 %  
