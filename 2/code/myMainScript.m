@@ -1,18 +1,11 @@
 %% RRMSE between noisy and noiseless images
-load('../data/assignmentImageDenoisingPhantom')
+load('../data/brainMRIslice')
 
-RRMSE_original = sqrt(sum((imageNoiseless - imageNoisy).^2))/sqrt(sum(imageNoiseless.^2));
+RRMSE_original = sqrt(sum((brainMRIsliceOrig - brainMRIsliceNoisy).^2))/sqrt(sum(brainMRIsliceOrig.^2));
 disp("The The value of the RRMSE between the originial image and the noisy image is "+ RRMSE_original)
 
-%% Finding out the optimal parameters of alpha and gamma for all the three prior models
-%  
-%  Lets say we did something here
-%  Some code written here
-%  and here to find the optimal values
-%  lets say they are alpha=0.96 for quadratic, 0.1, 0.008 huber
-%  0.1, 0.02 for DA
-%  we have to find this real time, as the images are inputs and no fixed
-%
+%% Optimality of alpha and gamma parameters for the three cases
+
 alpha_quadratic = 0.96;
 
 alpha_huber = 0.55;
@@ -32,47 +25,47 @@ disp("alpha = "+alpha_da+" and gamma = " + gamma_da+ " for Discontinuity-adaptiv
 %  RRMSE values corresponding to plus/minus 20% of the optimal value is also calculated in order to depict the optimality of
 %  the above parameters obtained.
 
-[quadraticDenoisedImage, objectiveValsQuadratic] = denoiseQuadraticMRF(alpha_quadratic, imageNoisy);
+[quadraticDenoisedImage, objectiveValsQuadratic] = denoiseQuadraticMRF(alpha_quadratic, brainMRIsliceNoisy);
 disp("RRMSE(alpha) for quadratic MRF is,")
-disp(sqrt(sum((imageNoiseless - quadraticDenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - quadraticDenoisedImage).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(1.2*alpha) for quadratic MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseQuadraticMRF(min(1.2*alpha_quadratic, 1), imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseQuadraticMRF(min(1.2*alpha_quadratic, 1), brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(0.8*alpha) for quadratic MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseQuadraticMRF(0.8*alpha_quadratic, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseQuadraticMRF(0.8*alpha_quadratic, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 
 %%
-[huberDenoisedImage, objectiveValsHuber] = denoiseHuberMRF(alpha_huber, gamma_huber, imageNoisy);
+[huberDenoisedImage, objectiveValsHuber] = denoiseHuberMRF(alpha_huber, gamma_huber, brainMRIsliceNoisy);
 disp("RRMSE(alpha, gamma) for Discontinuity-adaptive Huber MRF is,")
-disp(sqrt(sum((imageNoiseless - huberDenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - huberDenoisedImage).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive Huber MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(min(1.2*alpha_huber, 1), gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseHuberMRF(min(1.2*alpha_huber, 1), gamma_huber, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(0.8*alpha, gamma) for Discontinuity-adaptive Huber MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(0.8*alpha_huber, gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseHuberMRF(0.8*alpha_huber, gamma_huber, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive Huber MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(alpha_huber, 1.2*gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseHuberMRF(alpha_huber, 1.2*gamma_huber, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive Huber MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseHuberMRF(alpha_huber, 0.8*gamma_huber, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseHuberMRF(alpha_huber, 0.8*gamma_huber, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 
 %%
-[da_DenoisedImage, objectiveValsDA] = denoiseDAdapMRF(alpha_da, gamma_da, imageNoisy);
+[da_DenoisedImage, objectiveValsDA] = denoiseDAdapMRF(alpha_da, gamma_da, brainMRIsliceNoisy);
 disp("RRMSE(alpha, gamma) for Discontinuity-adaptive  MRF is,")
-disp(sqrt(sum((imageNoiseless - da_DenoisedImage).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - da_DenoisedImage).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(1.2*alpha, gamma) for Discontinuity-adaptive  MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(min(1.2*alpha_da, 1), gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseDAdapMRF(min(1.2*alpha_da, 1), gamma_da, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(0.8*alpha, gamma) for Discontinuity-adaptive  MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(0.8*alpha_da, gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseDAdapMRF(0.8*alpha_da, gamma_da, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(alpha, 1.2*gamma) for Discontinuity-adaptive  MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 1.2*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseDAdapMRF(alpha_da, 1.2*gamma_da, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 disp("RRMSE(alpha, 0.8*gamma) for Discontinuity-adaptive  MRF is,")
-disp(sqrt(sum((imageNoiseless - denoiseDAdapMRF(alpha_da, 0.8*gamma_da, imageNoisy)).^2))/sqrt(sum(imageNoiseless.^2)))
+disp(sqrt(sum((brainMRIsliceOrig - denoiseDAdapMRF(alpha_da, 0.8*gamma_da, brainMRIsliceNoisy)).^2))/sqrt(sum(brainMRIsliceOrig.^2)))
 
 %% Plotting the noisy, noiseless and denoised images
-imshow(imageNoiseless, 'colormap', jet)
+imshow(brainMRIsliceOrig, 'colormap', jet)
 colorbar
 title('Noiseless Image')
 
 figure
-imshow(imageNoisy, 'colormap', jet)
+imshow(brainMRIsliceNoisy, 'colormap', jet)
 colorbar
 title('Noisy Image')
 

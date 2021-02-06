@@ -1,14 +1,16 @@
-function curimg = denoiseQuadraticMRF(alpha, imnoi)
+function [curimg, obj_values] = denoiseQuadraticMRF(alpha, imnoi)
 
     curimg = imnoi;
     oldimg = curimg;
     
-    passes=1;
+    iter=1;
     rrmse_cur=0;
-    total_obj_val = 0;
+    
+    obj_values=zeros(1,100);
 
     while true
-        %disp("pass number"+passes);
+        %disp("pass number"+iter);
+        total_obj_value = 0;
         
         for i=0:255
             for j=0:255
@@ -39,20 +41,22 @@ function curimg = denoiseQuadraticMRF(alpha, imnoi)
             end
         end
         
-        obj_values[passes] = total_obj_value;
+        
         
         
         rrmse_new = sqrt(sum((curimg - oldimg).^2))/sqrt(sum(curimg.^2));
-        %disp(passes)
+        %disp(iter)
         %disp(rrmse_new)
-        if (abs(rrmse_cur - rrmse_new) < 0.0001 || passes>100)
-            %disp(passes)
+        if (abs(rrmse_cur - rrmse_new) < 0.0001 || iter>100)
+            %disp(iter)
             %disp(rrmse_cur)
             break
         else
             rrmse_cur = rrmse_new;
         end
-            
-        passes=passes+1;
+        
+        obj_values(iter) = total_obj_value;    
+        iter=iter+1;
+        
     end
 end
