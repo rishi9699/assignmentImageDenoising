@@ -2,7 +2,7 @@
 load('../data/brainMRIslice')
 
 RRMSE_original = sqrt(sum((brainMRIsliceOrig - brainMRIsliceNoisy).^2))/sqrt(sum(brainMRIsliceOrig.^2));
-disp("The value of the RRMSE between the originial image and the noisy image is "+ RRMSE_original)
+disp("The The value of the RRMSE between the originial image and the noisy image is "+ RRMSE_original)
 
 %% Optimality of alpha and gamma parameters for the three cases
 
