@@ -1,3 +1,4 @@
+% 0.1, 0.02
 function curimg = denoiseDAdapMRF(alpha, gamma, imnoi)
     
     curimg = imnoi;
@@ -7,7 +8,7 @@ function curimg = denoiseDAdapMRF(alpha, gamma, imnoi)
     rrmse_cur=0;
     
     while true
-        disp("pass number"+passes);
+        %disp("pass number"+passes);
         for i=2:255
             for j=2:255
                 xi = curimg(i,j);
@@ -35,11 +36,11 @@ function curimg = denoiseDAdapMRF(alpha, gamma, imnoi)
         end
         
         rrmse_new = sqrt(sum((curimg - oldimg).^2))/sqrt(sum(curimg.^2));
-        disp(passes)
-        disp(rrmse_new)
+        %disp(passes)
+        %disp(rrmse_new)
         if (abs(rrmse_cur - rrmse_new) < 0.0001 || passes>100)
-            disp(passes)
-            disp(rrmse_cur)
+            %disp(passes)
+            %disp(rrmse_cur)
             break
         else
             rrmse_cur = rrmse_new;
