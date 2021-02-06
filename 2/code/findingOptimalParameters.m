@@ -18,7 +18,7 @@ for alpha=0.8:0.01:1
     counter=counter+1;
 end
 % alpha=0.87 gives lowest RRMSE=0.1071
-% Choosing alpha_quadratic=0.88 as optimal
+% Choosing alpha_quadratic=0.87 as optimal
 
 %Finding the optimal parameters for Huber MRF
 rrmse=zeros(1,70);

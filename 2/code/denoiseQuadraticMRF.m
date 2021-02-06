@@ -9,7 +9,6 @@ function [curimg, obj_values] = denoiseQuadraticMRF(alpha, imnoi)
     obj_values=zeros(1,100);
 
     while true
-        %disp("pass number"+iter);
         total_obj_value = 0;
         
         for i=0:255
@@ -45,11 +44,7 @@ function [curimg, obj_values] = denoiseQuadraticMRF(alpha, imnoi)
         
         
         rrmse_new = sqrt(sum((curimg - oldimg).^2))/sqrt(sum(curimg.^2));
-        %disp(iter)
-        %disp(rrmse_new)
         if (abs(rrmse_cur - rrmse_new) < 0.0001 || iter>100)
-            %disp(iter)
-            %disp(rrmse_cur)
             break
         else
             rrmse_cur = rrmse_new;

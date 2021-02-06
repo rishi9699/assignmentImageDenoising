@@ -2,7 +2,7 @@
 load('../data/brainMRIslice')
 
 RRMSE_original = sqrt(sum((brainMRIsliceOrig - brainMRIsliceNoisy).^2))/sqrt(sum(brainMRIsliceOrig.^2));
-disp("The value of the RRMSE between the originial image and the noisy image is "+ RRMSE_original)
+disp("The value of the RRMSE between the original image and the noisy image is "+ RRMSE_original)
 
 %% Optimality of alpha and gamma parameters for the three cases
 
@@ -89,7 +89,7 @@ title('Image denoised using discontinuity adaptive prior')
 
 figure
 plot(1:sum(objectiveValsQuadratic~=0), objectiveValsQuadratic(1:sum(objectiveValsQuadratic~=0)), '-o')
-title("Objective-function value vs. iteration for Gaussian MRF prior")
+title("Objective-function value vs. iteration for Quadratic MRF prior")
 xlabel("iteration")
 ylabel("Objective-function value")
 xticks(1:sum(objectiveValsQuadratic~=0))
@@ -106,4 +106,5 @@ plot(1:sum(objectiveValsHuber~=0), objectiveValsHuber(1:sum(objectiveValsHuber~=
 title("Objective-function value vs. iteration for Huber MRF prior")
 xlabel("iteration")
 ylabel("Objective-function value")
-xticks(1:sum(objectiveValsHuber~=0))
+
+save("../results/resultValues")
